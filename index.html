@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>AI Flyer Design Mastery</title>
+
+<style>
+:root{
+  --deep:#071a3d;
+  --blue:#1e5eff;
+  --black:#111;
+  --gray:#f4f6fb;
+}
+
+/* ===== GENERAL ===== */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Segoe UI, Arial, sans-serif;
+}
+body{
+  background:white;
+  color:#111;
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1{font-size:56px;font-weight:900;line-height:1.05;text-align:center;}
+h2{font-size:34px;font-weight:900;margin-bottom:10px;text-align:center;}
+h3{font-size:20px;font-weight:800}
+p{font-size:15px;opacity:.9}
+
+/* ===== LAYOUT ===== */
+section{padding:28px 0}
+.container{max-width:1100px;margin:auto;padding:0 18px}
+
+/* ===== HERO ===== */
+.hero{
+  background:linear-gradient(135deg,var(--deep),var(--blue));
+  color:white;
+  text-align:center;
+  padding:70px 15px;
+}
+
+.hero p{margin-top:10px;font-size:18px}
+
+/* ===== CTA BUTTON ===== */
+.btn{
+  display:inline-block;
+  margin-top:14px;
+  padding:18px 40px;
+  font-size:20px;
+  font-weight:900;
+  text-align:center;
+  color:white;
+  border-radius:8px;
+  text-decoration:none;
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  box-shadow: 0 6px 15px rgba(255,0,0,0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 1.5s ease;
+  animation: pulse 2s infinite alternate, gradientShift 6s ease infinite;
+}
+
+/* Pulse animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* Gradient shift animation */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Hover effect */
+.btn:hover {
+  transform: scale(1.07);
+  box-shadow: 0 8px 20px rgba(255,0,0,0.5);
+}
+
+/* ===== COUNTDOWN ===== */
+.countdown{
+  margin-top:18px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.time-box{
+  background:red;
+  color:#fff;
+  padding:8px 14px;
+  border-radius:5px;
+  font-weight:900;
+  min-width:60px;
+  transition: transform 0.2s ease;
+}
+
+/* ===== GRID ===== */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:10px;
+}
+
+.card{
+  background:var(--gray);
+  padding:12px;
+  border-radius:6px;
+  font-size:14px;
+  font-weight:600;
+}
+
+/* ===== DARK SECTION ===== */
+.dark{
+  background:#111;
+  color:white;
+}
+.dark .card{
+  background:#1e1e1e;
+}
+
+/* ===== CAROUSEL ===== */
+.carousel{
+  position:relative;
+  overflow:hidden;
+  height:350px;
+  border-radius:8px;
+}
+
+.slides{
+  display:flex;
+  transition:transform .5s ease;
+  height:100%;
+}
+
+.slides img{
+  width:100%;
+  flex-shrink:0;
+  object-fit:cover;
+}
+
+.arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,.6);
+  color:white;
+  border:none;
+  font-size:22px;
+  width:40px;
+  height:40px;
+  cursor:pointer;
+}
+
+.left{left:5px}
+.right{right:5px}
+
+.dots{
+  position:absolute;
+  bottom:8px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:6px;
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  background:#ccc;
+  border-radius:50%;
+  cursor:pointer;
+}
+
+.dot.active{
+  background:var(--blue);
+}
+
+/* ===== CTA SECTION ===== */
+.cta{
+  background:var(--deep);
+  color:white;
+  text-align:center;
+  padding:55px 15px;
+}
+
+footer{
+  text-align:center;
+  padding:14px;
+  font-size:13px;
+  background:#f3f3f3;
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+.fade-up{
+  opacity:0;
+  transform:translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+.fade-up.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.slide-left{
+  opacity:0;
+  transform:translateX(-30px);
+  transition: all 0.8s ease-out;
+}
+
+.slide-left.show{
+  opacity:1;
+  transform:translateX(0);
+}
+</style>
+</head>
+
+<body>
+
+<!-- HERO -->
+<section class="hero fade-up">
+  <h1>Design Professional Flyers<br>With AI In Minutes</h1>
+  <p>No Photoshop. No graphic design skills. Just AI!.</p>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown">
+    <div class="time-box" id="h">00h</div>
+    <div class="time-box" id="m">00m</div>
+    <div class="time-box" id="s">00s</div>
+  </div>
+
+  <a href="https://wa.me/message/CGKFLNBB7L6PD1" class="btn">Get Access for ₦1k</a>
+</section>
+
+<!-- PROBLEM COPY -->
+<section class="dark fade-up">
+  <div class="container">
+    <h2>This Is For You If</h2>
+
+    <div class="grid slide-left">
+      <div class="card">You are spending ₦5k–₦20k per flyer</div>
+      <div class="card">You are tired of waiting days for delivery</div>
+      <div class="card">You are a Buisness owner</div>
+      <div class="card">You want to start making money online</div>
+    </div>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="fade-up">
+  <div class="container">
+    <h2>What You'll Learn</h2>
+
+    <div class="grid slide-left">
+      <div class="card">How to create flyers in minutes</div>
+      <div class="card">How to write powerful AI prompts</div>
+      <div class="card">Design like a professional without Canva</div>
+      <div class="card">How to start making money with the skill immediayely</div>
+    </div>
+  </div>
+</section>
+
+<!-- CAROUSEL -->
+<section class="fade-up">
+  <div class="container">
+    <h2>Sample Designs You'll Create</h2>
+
+    <div class="carousel">
+      <div class="slides" id="slides">
+        <img src="1.jpg">
+        <img src="2.jpg">
+        <img src="3.jpg">
+        <img src="4.jpg">
+      </div>
+
+      <button class="arrow left" onclick="prev()">❮</button>
+      <button class="arrow right" onclick="next()">❯</button>
+
+      <div class="dots" id="dots"></div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSE CONTENT -->
+<section class="fade-up">
+  <div class="container">
+    <h2>Inside This Course</h2>
+
+    <div class="grid slide-left">
+      <div class="card">Beginner friendly lessons</div>
+      <div class="card">Prompt engineering secrets</div>
+      <div class="card">Real flyer projects</div>
+      <div class="card">How to monetize immediately</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta fade-up">
+  <h2>⏰ WARNING: </h2> 
+  
+  <p>THIS OFFER IS NOT STAYING
+
+This price is PROMO ONLY.
+
+Once slots fill up: ❌ Price goes up
+
+❌ Access may close
+
+❌ You’ll pay more later. </p>
+
+<p>People are already grabbing this fast.</p>
+
+<p>If you’re seeing this page, you’re almost late..</p>
+  <a href="https://wa.me/message/CGKFLNBB7L6PD1" class="btn">Get Access for ₦1k</a>
+</section>
+
+<footer>© 2026 AI Flyer Design Mastery</footer>
+
+<script>
+/* ======================
+   CAROUSEL
+====================== */
+const slides = document.getElementById("slides");
+const images = slides.children;
+const dotsContainer = document.getElementById("dots");
+let index = 0;
+
+for(let i=0;i<images.length;i++){
+  const d = document.createElement("div");
+  d.classList.add("dot");
+  if(i===0) d.classList.add("active");
+  d.onclick=()=>goTo(i);
+  dotsContainer.appendChild(d);
+}
+
+const dots = document.querySelectorAll(".dot");
+
+function update(){
+  slides.style.transform=`translateX(-${index*100}%)`;
+  dots.forEach(d=>d.classList.remove("active"));
+  dots[index].classList.add("active");
+}
+
+function next(){ index=(index+1)%images.length; update(); }
+function prev(){ index=(index-1+images.length)%images.length; update(); }
+function goTo(i){ index=i; update(); }
+
+setInterval(next,3500);
+
+/* ======================
+   COUNTDOWN (24 HOURS)
+====================== */
+let time = 24*60*60;
+
+setInterval(()=>{
+  time--;
+
+  const h = Math.floor(time/3600);
+  const m = Math.floor((time%3600)/60);
+  const s = time%60;
+
+  const hBox = document.getElementById("h");
+  const mBox = document.getElementById("m");
+  const sBox = document.getElementById("s");
+
+  hBox.textContent = h+"h";
+  mBox.textContent = m+"m";
+  sBox.textContent = s+"s";
+
+  [hBox,mBox,sBox].forEach(box=>{
+    box.classList.add('update');
+    setTimeout(()=>box.classList.remove('update'),200);
+  });
+
+  if(time<=0) time = 24*60*60; // reset daily
+},1000);
+
+/* ======================
+   SCROLL FADE-UP ANIMATIONS
+====================== */
+const fadeElements = document.querySelectorAll('.fade-up, .slide-left');
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting) entry.target.classList.add('show');
+  });
+});
+fadeElements.forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
