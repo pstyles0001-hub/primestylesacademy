@@ -10,71 +10,6 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<script type="module">
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-apiKey: "AIzaSyCXHA7M23K4a5RDPunt4Bs1I8KSxNSosK0",
-authDomain: "ai-flyer-course.firebaseapp.com",
-projectId: "ai-flyer-course",
-storageBucket: "ai-flyer-course.firebasestorage.app",
-messagingSenderId: "572875617842",
-appId: "1:572875617842:web:7c16c7571b9e4b833fae2b"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-/* Hide page until verified */
-document.documentElement.style.display = "none";
-
-async function verifyAccess(){
-
-try{
-
-let code = localStorage.getItem("userCode");
-let deviceId = localStorage.getItem("deviceId");
-
-if(!code || !deviceId){
-window.location.replace("index.html");
-return;
-}
-
-const ref = doc(db,"accessCodes",code);
-
-const snapshot = await getDoc(ref);
-
-if(!snapshot.exists()){
-window.location.replace("index.html");
-return;
-}
-
-const data = snapshot.data();
-
-if(data.deviceId !== deviceId){
-window.location.replace("index.html");
-return;
-}
-
-/* Access allowed */
-document.documentElement.style.display = "block";
-
-}catch(error){
-
-console.error("Verification error:",error);
-
-window.location.replace("index.html");
-
-}
-
-}
-
-window.addEventListener("DOMContentLoaded", verifyAccess);
-
-</script>
-
 <style>
 
 *{
@@ -88,6 +23,7 @@ body{
 background:#020617;
 color:white;
 padding:20px;
+display:none;
 }
 
 /* HEADER */
@@ -314,12 +250,14 @@ Course Lessons
 
 <script>
 
+/* OPEN LESSON */
+
 function openLesson(lesson){
 localStorage.setItem("currentLesson",lesson)
 window.location.href="lesson.html"
 }
 
-/* Resume button */
+/* RESUME BUTTON */
 
 let lastLesson = localStorage.getItem("currentLesson") || 1
 
@@ -327,7 +265,7 @@ document.getElementById("resumeBtn").onclick=function(){
 openLesson(lastLesson)
 }
 
-/* Progress */
+/* PROGRESS SYSTEM */
 
 const totalLessons = 6
 
@@ -336,8 +274,6 @@ let completed = JSON.parse(localStorage.getItem("completedLessons")) || []
 let progressPercent = (completed.length / totalLessons) * 100
 
 document.getElementById("progressFill").style.width = progressPercent + "%"
-
-/* Completed lessons */
 
 completed.forEach(function(lesson){
 
@@ -349,6 +285,65 @@ status.classList.add("completed")
 }
 
 })
+
+</script>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+apiKey: "AIzaSyCXHA7M23K4a5RDPunt4Bs1I8KSxNSosK0",
+authDomain: "ai-flyer-course.firebaseapp.com",
+projectId: "ai-flyer-course",
+storageBucket: "ai-flyer-course.firebasestorage.app",
+messagingSenderId: "572875617842",
+appId: "1:572875617842:web:7c16c7571b9e4b833fae2b"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function verifyAccess(){
+
+let code = localStorage.getItem("userCode")
+let deviceId = localStorage.getItem("deviceId")
+
+if(!code || !deviceId){
+window.location.href="index.html"
+return
+}
+
+try{
+
+const ref = doc(db,"accessCodes",code)
+const snapshot = await getDoc(ref)
+
+if(!snapshot.exists()){
+window.location.href="index.html"
+return
+}
+
+const data = snapshot.data()
+
+if(data.deviceId !== deviceId){
+window.location.href="index.html"
+return
+}
+
+document.body.style.display="block"
+
+}catch(err){
+
+console.error(err)
+window.location.href="index.html"
+
+}
+
+}
+
+verifyAccess()
 
 </script>
 
