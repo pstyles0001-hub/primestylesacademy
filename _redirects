@@ -1,0 +1,9 @@
+/dashboard     /dashboard.html     200
+/lesson        /lesson.html        200
+/admin         /admin.html         200
+/aiflyer       /aiflyer.html       200
+
+/dashboard.html    /dashboard    301
+/lesson.html       /lesson       301
+/admin.html        /admin        301
+/aiflyer.html      /aiflyer      301

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<script>
+if(localStorage.getItem("courseAccess") !== "granted"){
+window.location.href="index"
+}
+</script>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lesson</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:#020617;
+color:white;
+padding:20px;
+padding-bottom:80px;
+}
+
+/* BACK BUTTON */
+
+.back{
+margin-bottom:20px;
+font-size:14px;
+opacity:0.7;
+cursor:pointer;
+}
+
+/* VIDEO PLAYER */
+
+.videoContainer{
+width:100%;
+max-width:900px;
+margin:auto;
+aspect-ratio:9/16;
+background:black;
+border-radius:18px;
+overflow:hidden;
+margin-bottom:25px;
+box-shadow:0 15px 40px rgba(0,0,0,0.6);
+}
+
+iframe{
+width:100%;
+height:100%;
+border:none;
+display:block;
+}
+
+/* LESSON INFO */
+
+.lessonTitle{
+font-size:20px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.lessonDesc{
+font-size:14px;
+opacity:0.7;
+margin-bottom:25px;
+}
+
+/* COPY BOX */
+
+.copyBox{
+background:#0f172a;
+border:1px solid rgba(255,255,255,0.05);
+border-radius:14px;
+padding:16px;
+margin-bottom:20px;
+}
+
+.copyBox textarea{
+width:100%;
+background:#020617;
+border:none;
+color:white;
+padding:12px;
+border-radius:10px;
+margin-bottom:10px;
+resize:none;
+font-size:13px;
+line-height:1.5;
+}
+
+.copyBtn{
+background:#2563eb;
+border:none;
+padding:10px 14px;
+border-radius:10px;
+color:white;
+font-size:13px;
+font-weight:600;
+cursor:pointer;
+}
+
+.copyBtn:active{
+transform:scale(.96);
+}
+
+/* NAV BAR */
+
+.lessonNav{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#0b0b0f;
+border-top:1px solid #1f2937;
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px 12px;
+z-index:999;
+}
+
+.lessonNav button{
+flex:1;
+margin:0 5px;
+border:none;
+padding:10px 12px;
+border-radius:10px;
+font-size:13px;
+font-weight:600;
+color:white;
+}
+
+.prevBtn{
+background:#1f2937;
+}
+
+.doneBtn{
+background:#16a34a;
+}
+
+.nextBtn{
+background:#2563eb;
+}
+
+.lessonNav button:active{
+transform:scale(.96);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="back" onclick="goBack()">
+← Back to Dashboard
+</div>
+
+<div class="videoContainer">
+<iframe id="videoPlayer" allowfullscreen></iframe>
+</div>
+
+<div class="lessonTitle" id="lessonTitle">
+Lesson Title
+</div>
+
+<div class="lessonDesc" id="lessonDesc">
+Lesson description
+</div>
+
+<div id="copySection"></div>
+
+<div class="lessonNav">
+
+<button class="prevBtn" onclick="previousLesson()">
+← Previous
+</button>
+
+<button class="doneBtn" onclick="markDone()">
+✓ Mark Done
+</button>
+
+<button class="nextBtn" onclick="nextLesson()">
+Next →
+</button>
+
+</div>
+
+<script>
+
+/* LESSON DATA */
+
+const lessons = {
+
+1:{
+title:"Setting Up",
+desc:"Learn how to set up the tools needed for AI flyer design.",
+video:"https://drive.google.com/file/d/1ZsiS_0xLel7XD9TbUKmrvDtasODY4DUk/preview"
+},
+
+2:{
+title:"Prompt Direct System",
+desc:"Learn how to write powerful prompts for AI flyer generation.",
+video:"https://drive.google.com/file/d/12MFxNBRAyJCcX-o2Fm8XI4ZQdLqozgka/preview"
+},
+
+3:{
+title:"Reverse Prompt System",
+desc:"Use reverse prompting to recreate designs with AI.",
+video:"https://drive.google.com/file/d/1y1QQAnT2gqtxlMZTP7R_LQlGwnwyX7Z-/preview"
+},
+
+4:{
+title:"Working With Custom Images",
+desc:"Learn how to integrate custom images into AI flyers.",
+video:"https://drive.google.com/file/d/1Nt0_EwvEB6eYS_MrbQmZYndJIF7KCUkj/preview"
+},
+
+5:{
+title:"Working With Arena AI",
+desc:"Explore Arena AI for advanced flyer generation.",
+video:"https://drive.google.com/file/d/1I0JLJoACST087Bs1hymDb4l461J1TGQP/preview"
+},
+
+6:{
+title:"How To Monetize This Skill",
+desc:"Learn how to make money designing flyers with AI.",
+video:"https://drive.google.com/file/d/1e5DoN3rMSv3wQJ0tTAwLDUojQ4099Bcg/preview"
+}
+
+}
+
+/* LOAD LESSON */
+
+let lessonNumber = parseInt(localStorage.getItem("currentLesson")) || 1
+
+if(!lessons[lessonNumber]){
+lessonNumber = 1
+}
+
+let lesson = lessons[lessonNumber]
+
+document.getElementById("lessonTitle").innerText = lesson.title
+document.getElementById("lessonDesc").innerText = lesson.desc
+document.getElementById("videoPlayer").src = lesson.video
+
+
+/* COPY CONTENT */
+
+const copyContent = {
+
+2:[
+`FLYER TYPE: EVENT / PRODUCT NAME: TAGLINE (optional):
+DATE:
+TIME:
+LOCATION / VENUE:
+TARGET AUDIENCE:
+KEY INFORMATION TO INCLUDE:
+-
+-
+-
+SPECIAL OFFER (if any):
+CONTACT DETAILS:
+MOOD / STYLE:
+COLOR PREFERENCE (optional):
+IMAGE FORMAT:
+
+Act as a senior creative director and professional flyer designer.
+Using the details I provided above:
+1️⃣ Analyze the type of flyer and target audience.
+2️⃣ Propose three different professional layout concepts suitable for this project.
+3️⃣ Choose the strongest concept and explain why it works best.
+4️⃣ Generate a highly detailed AI image-generation master prompt.`],
+
+3:[
+`Act as a professional graphic designer prompt engineer.
+Analyse this image and write a well detailed image prompt for it.`],
+
+6:[
+`Hello 👋
+I’ve been seeing the products you post on your status. Nice one 👍
+Just wanted to ask, have you ever tried promoting them with a proper flyer design? It usually helps attract more buyers.
+I’m a flyer designer, so if you’d like I can show you some samples.`,
+
+`Good day 😊
+I noticed many businesses struggle to get attention online because their flyers don’t stand out.
+I design attractive promotional flyers for businesses, events, and sales.
+Would you like me to show you some samples?`
+]
+
+}
+
+/* DISPLAY COPY BOX */
+
+if(copyContent[lessonNumber]){
+
+let html = ""
+
+copyContent[lessonNumber].forEach((text,i)=>{
+
+html += `
+<div class="copyBox">
+
+<textarea readonly id="copy${i}">
+${text}
+</textarea>
+
+<button class="copyBtn" onclick="copyText(${i})">
+Copy
+</button>
+
+</div>
+`
+
+})
+
+document.getElementById("copySection").innerHTML = html
+
+}
+
+function copyText(i){
+
+let text = document.getElementById("copy"+i)
+
+text.select()
+text.setSelectionRange(0,99999)
+
+navigator.clipboard.writeText(text.value)
+
+alert("Copied!")
+
+}
+
+
+/* BACK */
+
+function goBack(){
+window.location.href="dashboard"
+}
+
+
+/* MARK LESSON COMPLETE */
+
+function markDone(){
+
+let completed = JSON.parse(localStorage.getItem("completedLessons")) || []
+
+if(!completed.includes(lessonNumber)){
+completed.push(lessonNumber)
+}
+
+localStorage.setItem("completedLessons",JSON.stringify(completed))
+
+alert("Lesson completed!")
+
+}
+
+
+/* NEXT LESSON */
+
+function nextLesson(){
+
+let next = lessonNumber + 1
+
+if(next > 6){
+alert("You finished the course!")
+return
+}
+
+localStorage.setItem("currentLesson",next)
+
+window.location.href="lesson"
+
+}
+
+
+/* PREVIOUS LESSON */
+
+function previousLesson(){
+
+let prev = lessonNumber - 1
+
+if(prev < 1){
+return
+}
+
+localStorage.setItem("currentLesson",prev)
+
+window.location.href="lesson"
+
+}
+
+</script>
+
+</body>
+</html>
