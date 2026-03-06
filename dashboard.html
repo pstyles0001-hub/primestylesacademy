@@ -3,6 +3,13 @@
 
 <head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Course Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -20,44 +27,53 @@ appId: "1:572875617842:web:7c16c7571b9e4b833fae2b"
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+/* Hide page until verified */
+document.documentElement.style.display = "none";
+
 async function verifyAccess(){
 
-let code = localStorage.getItem("userCode")
-let deviceId = localStorage.getItem("deviceId")
+try{
+
+let code = localStorage.getItem("userCode");
+let deviceId = localStorage.getItem("deviceId");
 
 if(!code || !deviceId){
-window.location.href="index.html"
-return
+window.location.replace("index.html");
+return;
 }
 
-const ref = doc(db,"accessCodes",code)
+const ref = doc(db,"accessCodes",code);
 
-const snapshot = await getDoc(ref)
+const snapshot = await getDoc(ref);
 
 if(!snapshot.exists()){
-window.location.href="index.html"
-return
+window.location.replace("index.html");
+return;
 }
 
-const data = snapshot.data()
+const data = snapshot.data();
 
 if(data.deviceId !== deviceId){
-window.location.href="index.html"
-return
+window.location.replace("index.html");
+return;
 }
+
+/* Access allowed */
+document.documentElement.style.display = "block";
+
+}catch(error){
+
+console.error("Verification error:",error);
+
+window.location.replace("index.html");
 
 }
 
-verifyAccess()
+}
+
+window.addEventListener("DOMContentLoaded", verifyAccess);
 
 </script>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Course Dashboard</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
@@ -298,14 +314,12 @@ Course Lessons
 
 <script>
 
-/* OPEN LESSON */
-
 function openLesson(lesson){
 localStorage.setItem("currentLesson",lesson)
 window.location.href="lesson.html"
 }
 
-/* RESUME BUTTON */
+/* Resume button */
 
 let lastLesson = localStorage.getItem("currentLesson") || 1
 
@@ -313,19 +327,17 @@ document.getElementById("resumeBtn").onclick=function(){
 openLesson(lastLesson)
 }
 
-/* PROGRESS SYSTEM */
+/* Progress */
 
 const totalLessons = 6
 
 let completed = JSON.parse(localStorage.getItem("completedLessons")) || []
 
-/* UPDATE PROGRESS BAR */
-
 let progressPercent = (completed.length / totalLessons) * 100
 
 document.getElementById("progressFill").style.width = progressPercent + "%"
 
-/* UPDATE LESSON STATUS */
+/* Completed lessons */
 
 completed.forEach(function(lesson){
 
